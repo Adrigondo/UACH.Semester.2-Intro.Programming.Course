@@ -1,0 +1,35 @@
+PROCESO DE DESARROLLO DE SOFTWARE:
+
+* RequerimientoS
+* Analisis
+* Diseño
+* Construye
+* Prueba
+* Producción
+Departamento de calidad
+
+CONCURRENCIA:
+Hacer que el programa corra en paralelo.
+
+NOMBRE DE VARIABLES:
+* Nunca pueden comenzar con numeros.
+* No debe incluir caracteres simbolicos,
+a excepción de "_" y "$".
+* No suelen poder soportar nombres de más
+de 40 caracteres.
+* No se pueden utilizar palabras reservadas.
+
+TIPOS DE VARIABLES:
+* ENTEROS:
+	* int : Tamaño de 32 bits
+	* short int : Tamaño de 16 bits
+	* long long int : Tamaño de 64 bits
+	* unsigned long long int : 64 bits solamente positivos.
+* CARACTERES:
+	* char :
+		* 1 caracter de 1 byte.
+		* Desde -128 a 127.
+		* unsigned char va de 0 a 255.
+* CONSTANTES:
+	* const : No se puede cambiar su valor, por convención se escriben en mayúsculas.
+

@@ -4,6 +4,8 @@
     Grupo: 2CC2
 */
 /*
+    Wednesday 02/23/2022
+    
     Halves program  (Programa de mitades)
     
     This program:

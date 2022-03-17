@@ -6,7 +6,7 @@
 /*
     Wednesday 02/23/2022
     
-    Halves program  (Programa de mitades)
+    Multifunction program
     
     This program print a menu for do the follow operations:
     1. Print the numbers from 0 to 100

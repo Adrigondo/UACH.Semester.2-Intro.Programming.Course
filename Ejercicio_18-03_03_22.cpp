@@ -28,6 +28,7 @@ int main(){
         cout<<"|===========================================================================|\n";
         cout<<"| Calculo de la serie 1/(2*1) + 2/(2*2) + 3/(2*3) + 4/(2*4) + ... + n/(2*n) |\n";
         cout<<"|===========================================================================|\n\n";
+        
         cout<<"Ingrese el número n: ";
         cin>>n;
         for(float i=1; i<n; i++){
@@ -35,8 +36,10 @@ int main(){
             calculation+=(i/(2*i));
         }
         cout<<n<<"/(2*"<<n<<") = ";
+
         calculation+=(n/(2*n));
         cout<<calculation;
+
         // Request to the user if wants do more operations
         cout<<"\n\n¿Desea realizar otro calculo? (s/n): ";
         cin>>aux;

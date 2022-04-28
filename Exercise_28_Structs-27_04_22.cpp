@@ -47,6 +47,4 @@ struct Factura{
 int main(){
     // Clean the console
     system ("clear");
-
-    
 }

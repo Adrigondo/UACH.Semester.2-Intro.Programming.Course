@@ -19,6 +19,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
+
 struct Address{
     string calle="";
     int numero=0;
@@ -48,6 +50,10 @@ struct Invoice{
     int invoice_number;
 };
 
+
+/* --------------------------------DECLARATIONS---------------------------------------------*/
+
+Invoice invoice_empty;
 Invoice invoices_list[11];
 int amount_invoices=0;
 
@@ -67,10 +73,13 @@ void editDateTime(Invoice &invoice);
 /*4*/ void listInvoices();
 /*5*/ void showInvoice();
 
+bool areThereInvoices();
 int searchInvoice(Invoice &invoice, int invoice_number);
 void printInvoiceData(Invoice invoice);
 void cleanScreen();
 void notifySave();
+
+/* --------------------------------------MAIN--------------------------------------------------*/
 
 int main(){
     // Clean the console
@@ -119,12 +128,12 @@ int main(){
 
             case 3:
                 cout<<"\n\t3. Eliminar factura existente.\n\n";
+                deleteInvoice();
                 break;
 
             case 4:
                 cout<<"\n\t4. Listar facturas (numeros de facturas).\n\n";
-                
-                cout<<"Ingrese los números separados por espacio: ";
+                listInvoices();
                 break;
 
             case 5:
@@ -144,16 +153,25 @@ int main(){
     cout<<"¡Tenga un excelente día BIP BOP!\n\n";
 }
 
+/* --------------------------------IMPLEMENTATIONS---------------------------------------------*/
+
 void cleanScreen(){
     // Clean screen
     system ("clear");
 }
 void notifySave(){
     string aux;
-    cout<<"\n¡Operación exitosa!";
+    cout<<"\n\n¡Operación exitosa!";
     cout<<"\nPulse [enter] para continuar...";
     cin.ignore();
     getline(cin, aux);
+}
+bool areThereInvoices(){
+    if(amount_invoices==0){
+        cout<<"[No hay facturas registradas]";
+        return false;
+    }
+    return true;
 }
 
 Customer setCustomerData(){
@@ -226,10 +244,7 @@ Invoice setInvoiceData(){
 void catchInvoice() {
     Invoice invoice=setInvoiceData();
     invoices_list[++amount_invoices]=invoice;
-    cout<<"\nGuardando factura nueva...\n\n";
-    
-        //cout<<"\nERROR: Revisa que hayas llenado los campos correctamente.\n";
-    
+    cout<<"\nGuardando factura nueva...";
 }
 
 void editCustomer(Invoice &invoice) {
@@ -250,6 +265,7 @@ void editCustomer(Invoice &invoice) {
 
         cout<<"\n\nDigite el número de la operación que desea realizar: ";
         cin>>option;
+        cout<<"\n";
 
         while (option<0&&option>3)
         {
@@ -286,7 +302,6 @@ void editCustomer(Invoice &invoice) {
         cleanScreen();
     }while(option!=0);
 }
-
 void editAddress(Invoice &invoice) {
     int option;
 
@@ -305,6 +320,7 @@ void editAddress(Invoice &invoice) {
 
         cout<<"\n\nDigite el número de la operación que desea realizar: ";
         cin>>option;
+        cout<<"\n";
 
         while (option<0&&option>4)
         {
@@ -343,7 +359,6 @@ void editAddress(Invoice &invoice) {
         cleanScreen();
     }while(option!=0);
 }
-
 void editDateTime(Invoice &invoice) {
     int option;
     
@@ -363,6 +378,7 @@ void editDateTime(Invoice &invoice) {
 
         cout<<"\n\nDigite el número de la operación que desea realizar: ";
         cin>>option;
+        cout<<"\n";
 
         while (option<0&&option>5)
         {
@@ -412,9 +428,10 @@ void editDateTime(Invoice &invoice) {
         cleanScreen();
     }while(option!=0);
 }
-
 /*2*/
 void editInvoice(){
+    if(!areThereInvoices())return;
+
     Invoice invoice;
     int invoice_index;
     int invoice_number;
@@ -475,10 +492,49 @@ void editInvoice(){
     invoices_list[invoice_index]=invoice;
 }
 
+void popInvoice(int invoice_index){
+    for(int i=invoice_index; i<amount_invoices; i++){
+        invoices_list[i]=invoices_list[i+1];
+    }
+    invoices_list[amount_invoices]=invoice_empty;
+    amount_invoices--;
+}
 /*3*/
-void deleteInvoice();
+void deleteInvoice(){
+    if(!areThereInvoices())return;
+
+    Invoice invoice;
+    int invoice_number;
+    int invoice_index;
+
+    cout<<"Ingrese el número de la factura que desea eliminar: ";
+    cin>>invoice_number;
+
+    invoice_index=searchInvoice(invoice, invoice_number);
+    if(!invoice_index) return;
+
+    printInvoiceData(invoice);
+
+    string aux;
+    do{
+        cout<<"¿Estás seguro que deseas borrar? [SI/NO] : ";
+        cin>>aux;
+    }while(aux!="SI"&&aux!="NO");
+
+    if(aux=="NO")return;
+
+    popInvoice(invoice_index);
+
+    cout<<"Borrando factura...";
+}
+
 /*4*/
-void listInvoices();
+void listInvoices(){
+    if(!areThereInvoices())return;
+    for(int i=1; i<=amount_invoices; i++){
+        cout<<"  "<<i<<". Factura #"<<invoices_list[i].invoice_number<<" ("<<invoices_list[i].customer.nombre<<" "<<invoices_list[i].customer.apellido_paterno<<").\n";
+    }
+}
 
 void printInvoiceData(Invoice invoice){
     cout<<"Factura No. "<<invoice.invoice_number<<" : \n";
@@ -488,7 +544,6 @@ void printInvoiceData(Invoice invoice){
 
     cout<<"\n\n";
 }
-
 int searchInvoice(Invoice &invoice, int invoice_number){
     /*
         Invoice is the variable where the result will be saved
@@ -507,9 +562,10 @@ int searchInvoice(Invoice &invoice, int invoice_number){
     cout<<"\n";
     return invoice_index;
 }
-
 /*5*/
 void showInvoice(){
+    if(!areThereInvoices())return;
+
     Invoice invoice;
     int invoice_number;
 

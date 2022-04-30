@@ -20,25 +20,25 @@
 using namespace std;
 
 struct Address{
-    string calle;
-    int numero;
-    string colonia;
-    string ciudad;
+    string calle="";
+    int numero=0;
+    string colonia="";
+    string ciudad="";
 };
 struct Date{
-    int dia;
-    int mes; 
-    int anio;
+    int dia=0;
+    int mes=0; 
+    int anio=0;
 };
 struct Time{
-    int horas;
-    int minutos;
-    int segundos;
+    int horas=0;
+    int minutos=0;
+    int segundos=0;
 };
 struct Customer{
-    string nombre;
-    string apellido_paterno;
-    string apellido_materno;
+    string nombre="";
+    string apellido_paterno="";
+    string apellido_materno="";
 };
 struct Invoice{
     Address address;
@@ -49,7 +49,7 @@ struct Invoice{
 };
 
 Invoice invoices_list[11];
-int it_invoice=0;
+int amount_invoices=0;
 
 Address getAddressData();
 Date getDateData();
@@ -57,18 +57,26 @@ Time getTimeData();
 Customer getCustomerData();
 Invoice getInvoiceData();
 /*1*/ void catchInvoice();
-Invoice editInvoiceData();
+
+void editCustomer(Invoice &invoice);
+void editAddress(Invoice &invoice);
+void editDateTime(Invoice &invoice);
 /*2*/ void editInvoice();
+
 /*3*/ void deleteInvoice();
 /*4*/ void listInvoices();
 /*5*/ void showInvoice();
+
+int searchInvoice(Invoice &invoice, int invoice_number);
+void printInvoiceData(Invoice invoice);
+void cleanScreen();
+void notifySave();
 
 int main(){
     // Clean the console
     system ("clear");
 
     int option=0;
-    char aux=' ';
     do {
         // Start poster
         cout<<"|=====================================================|\n";
@@ -76,7 +84,7 @@ int main(){
         cout<<"|=====================================================|\n\n";
 
         // Options menu
-        cout<<"- Menu de procedimientos disponibles -";
+        cout<<"- Menu de operaciones disponibles -";
         cout<<"\n\t1. Capturar nueva factura.";
         cout<<"\n\t2. Editar factura existente.";
         cout<<"\n\t3. Eliminar factura existente.";
@@ -87,15 +95,17 @@ int main(){
         // Read the option from the user
         cout<<"\n\nDigite el número de la operación que desea realizar: ";
         cin>>option;
-        while (option<0||option>14){
+        while (option<0||option>5){
             cout<<"\n\nLa opción ingresada no existe, digite una opción valida: ";
             cin>>option;
         }
         
         if(option==0) break;
 
+        cleanScreen();
+
         // Perform the chosen operation
-        cout<<"\nSeleccionó la opción "<<option<<": ";
+        cout<<"\nSeleccionó la opción: ";
         switch (option){
             case 1:
                 cout<<"\n\t1. Capturar nueva factura.\n\n";
@@ -119,15 +129,14 @@ int main(){
 
             case 5:
                 cout<<"\n\t5. Ver factura por su número.\n\n";
+                showInvoice();
                 break;
 
             default:
                 break;
         }
 
-        // Request to the user if wants do more operations?
-        cout<<"\n\nPuse cualquier número para volver al menú... ";
-        cin>>aux;
+        notifySave();
 
         // Clean lines since menu
         system ("clear");
@@ -135,10 +144,35 @@ int main(){
     cout<<"¡Tenga un excelente día BIP BOP!\n\n";
 }
 
+void cleanScreen(){
+    // Clean screen
+    system ("clear");
+}
+void notifySave(){
+    string aux;
+    cout<<"\n¡Operación exitosa!";
+    cout<<"\nPulse [enter] para continuar...";
+    cin.ignore();
+    getline(cin, aux);
+}
+
+Customer setCustomerData(){
+    Customer customer;
+
+    cout<<"\nIngrese sus datos personales:\n";
+    cout<<"  Nombre: ";
+    cin>>customer.nombre;
+    cout<<"  Apellido paterno: ";
+    cin>>customer.apellido_paterno;
+    cout<<"  Apellido materno: ";
+    cin>>customer.apellido_materno;
+
+    return customer;
+}
 Address setAddressData(){
     Address address;
 
-    cout<<"\nIngrese los datos de su dirección:";
+    cout<<"\nIngrese los datos de su dirección:\n";
     cout<<"  Ciudad: ";
     cin>>address.ciudad;
     cout<<"  Colonia: ";
@@ -153,7 +187,7 @@ Address setAddressData(){
 Date setDateData(){
     Date date;
 
-    cout<<"\nIngrese la fecha:";
+    cout<<"\nIngrese la fecha:\n";
     cout<<"  Dia: ";
     cin>>date.dia;
     cout<<"  Mes: ";
@@ -176,20 +210,6 @@ Time setTimeData(){
 
     return time;
 }
-Customer setCustomerData(){
-    Customer customer;
-
-    cout<<"\nIngrese sus datos personales:\n";
-    cout<<"  Nombre: ";
-    cin>>customer.nombre;
-    cout<<"  Apellido paterno: ";
-    cin>>customer.apellido_paterno;
-    cout<<"  Apellido materno: ";
-    cin>>customer.apellido_materno;
-
-    return customer;
-}
-
 Invoice setInvoiceData(){
     Invoice invoice;
     invoice.customer=setCustomerData();
@@ -202,62 +222,302 @@ Invoice setInvoiceData(){
 
     return invoice;
 }
-
 /*1*/
 void catchInvoice() {
     Invoice invoice=setInvoiceData();
-    invoices_list[it_invoice]=invoice;
-    cout<<"\nFactura nueva guardada con exito\n";
+    invoices_list[++amount_invoices]=invoice;
+    cout<<"\nGuardando factura nueva...\n\n";
     
         //cout<<"\nERROR: Revisa que hayas llenado los campos correctamente.\n";
     
 }
 
+void editCustomer(Invoice &invoice) {
+    //Customer customer;
+    int option;
+    
+    do{
+        cout<<"[INFORMACION ACTUAL]";
+        cout<<" Cliente: "<<invoice.customer.nombre<<" "<<invoice.customer.apellido_paterno<<" "<<invoice.customer.apellido_materno;
+        cout<<"\n\n";
+        // cout<<"( Los cambios se reflejan cuando termines cuando selecciones terminar )\n"
+
+        cout<<"Datos a editar del cliente: ";
+        cout<<"\n\t[1] Nombre.";
+        cout<<"\n\t[2] Apellido paterno.";
+        cout<<"\n\t[3] Apellido materno.";
+        cout<<"\n\t[0] Terminar y regresar";
+
+        cout<<"\n\nDigite el número de la operación que desea realizar: ";
+        cin>>option;
+
+        while (option<0&&option>3)
+        {
+            cout<<"OPCION INVALIDA. Ingrese una opción válida: ";
+            cin>>option;
+        }
+        
+        if(option==0){
+            break;
+        }
+
+        cout<<"\tEscribe el nuevo valor ";
+        switch (option) {
+            case 1:
+                cout<<"del nombre: ";
+                cin>>invoice.customer.nombre;
+
+                break;
+            case 2:
+                cout<<"del apellido paterno: ";
+                cin>>invoice.customer.apellido_paterno;
+                break;
+            case 3:
+                cout<<"del apellido materno: ";
+                cin>>invoice.customer.apellido_materno;
+                break;
+            
+            default:
+                break;
+        }
+
+        //invoice.customer=customer;
+        notifySave();
+        cleanScreen();
+    }while(option!=0);
+}
+
+void editAddress(Invoice &invoice) {
+    int option;
+
+
+    do{
+        cout<<"[INFORMACION ACTUAL]";
+        cout<<" Dirección: "<<invoice.address.ciudad<<", Col. "<<invoice.address.colonia<<", Calle "<<invoice.address.calle<<" #"<<invoice.address.numero;
+        cout<<"\n\n";
+
+        cout<<"Datos a editar de la dirección: ";
+        cout<<"\n\t[1] Ciudad.";
+        cout<<"\n\t[2] Colonia.";
+        cout<<"\n\t[3] Calle.";
+        cout<<"\n\t[4] Numero de calle.";
+        cout<<"\n\t[0] Terminar y regresar";
+
+        cout<<"\n\nDigite el número de la operación que desea realizar: ";
+        cin>>option;
+
+        while (option<0&&option>4)
+        {
+            cout<<"OPCION INVALIDA. Ingrese una opción válida: ";
+            cin>>option;
+        }
+        
+        if(option==0){
+            break;
+        }
+
+        cout<<"\tEscribe el nuevo valor para ";
+        switch (option) {
+            case 1:
+                cout<<"[1] Ciudad : ";
+                cin>>invoice.address.ciudad;
+                break;
+            case 2:
+                cout<<"[2] Colonia : ";
+                cin>>invoice.address.colonia;
+                break;
+            case 3:
+                cout<<"[3] Calle : ";
+                cin>>invoice.address.calle;
+                break;
+            case 4:
+                cout<<"[4] Numero de calle : ";
+                cin>>invoice.address.numero;
+                break;
+            
+            default:
+                break;
+        }
+        
+        notifySave();
+        cleanScreen();
+    }while(option!=0);
+}
+
+void editDateTime(Invoice &invoice) {
+    int option;
+    
+    do{
+        cout<<"[INFORMACION ACTUAL]";
+        cout<<" Fecha y hora: "<<invoice.time.horas<<"H:"<<invoice.time.minutos<<"M:"<<invoice.time.segundos<<"S - "<<invoice.date.dia<<"/"<<invoice.date.mes<<"/"<<invoice.date.anio<<"\n";
+        cout<<"\n\n";
+
+        cout<<"Datos a editar de la fecha y hora: ";
+        cout<<"\n\t[1] Dia.";
+        cout<<"\n\t[2] Mes.";
+        cout<<"\n\t[3] Año.";
+        cout<<"\n\t[4] Horas.";
+        cout<<"\n\t[5] Minutos.";
+        cout<<"\n\t[6] Segundos.";
+        cout<<"\n\t[0] Terminar y regresar";
+
+        cout<<"\n\nDigite el número de la operación que desea realizar: ";
+        cin>>option;
+
+        while (option<0&&option>5)
+        {
+            cout<<"OPCION INVALIDA. Ingrese una opción válida: ";
+            cin>>option;
+        }
+        
+        if(option==0){
+            break;
+        }
+
+        cout<<"\tEscribe el nuevo valor para ";
+        switch (option) {
+            case 1:
+                cout<<"[1] Dia : ";
+                cin>>invoice.date.dia;
+                break;
+
+            case 2:
+                cout<<"[2] Mes : ";
+                cin>>invoice.date.mes;
+                break;
+
+            case 3:
+                cout<<"[3] Año : ";
+                cin>>invoice.date.anio;
+                break;
+
+            case 4:
+                cout<<"[4] Horas : ";
+                cin>>invoice.time.horas;
+                break;
+            case 5:
+                cout<<"[5] Minutos : ";
+                cin>>invoice.time.minutos;
+                break;
+            case 6:
+                cout<<"[6] Segundos : ";
+                cin>>invoice.time.segundos;
+                break;
+            
+            default:
+                break;
+        }
+        
+        notifySave();
+        cleanScreen();
+    }while(option!=0);
+}
+
 /*2*/
 void editInvoice(){
-    Invoice invoice=NULL;
-    int invoice_number;
+    Invoice invoice;
     int invoice_index;
+    int invoice_number;
+    int option;
     char aux;
-
 
     cout<<"Ingrese el número de la factura que desea editar: ";
     cin>>invoice_number;
-    for(int i=0; i<=it_invoice; i++){
+
+    invoice_index=searchInvoice(invoice, invoice_number);
+    if(!invoice_index) return;
+
+    printInvoiceData(invoice);
+
+    do {
+        // Menu for fields to edit
+        cout<<"Campos editables de la factura:";
+        cout<<"\n\t(1) Cliente.";
+        cout<<"\n\t(2) Dirección.";
+        cout<<"\n\t(3) Fecha y hora.";
+        cout<<"\n\t(0) Terminar edición y volver al menú principal";
+        
+        cout<<"\n\nDigite el número de la opción: ";
+        cin>>option;
+        while (option<0||option>3){
+            cout<<"\n\nLa opción ingresada no existe, digite una opción valida: ";
+            cin>>option;
+        }
+
+        if(option==0) break;
+
+        cleanScreen();
+
+        // Perform the chosen operation
+        cout<<"La opción seleccionada es: ";
+        switch (option){
+            case 1:
+                cout<<"(1) Cliente.\n\n";
+                editCustomer(invoice);
+                break;
+
+            case 2:
+                cout<<"(2) Dirección.\n\n";
+                editAddress(invoice);
+                break;
+
+            case 3:
+                cout<<"(3) Fecha y hora.\n\n";
+                editDateTime(invoice);
+                break;
+
+            default:
+                break;
+        }
+        notifySave();
+        cleanScreen();
+    }while(option!=0);
+    invoices_list[invoice_index]=invoice;
+}
+
+/*3*/
+void deleteInvoice();
+/*4*/
+void listInvoices();
+
+void printInvoiceData(Invoice invoice){
+    cout<<"Factura No. "<<invoice.invoice_number<<" : \n";
+    cout<<"  Cliente:  "<<invoice.customer.nombre<<" "<<invoice.customer.apellido_paterno<<" "<<invoice.customer.apellido_materno<<"\n";
+    cout<<"  Dirección:  "<<invoice.address.ciudad<<", Col. "<<invoice.address.colonia<<", Calle "<<invoice.address.calle<<" #"<<invoice.address.numero<<"\n";
+    cout<<"  Fecha y hora:  "<<invoice.time.horas<<"H:"<<invoice.time.minutos<<"M:"<<invoice.time.segundos<<"S - "<<invoice.date.dia<<"/"<<invoice.date.mes<<"/"<<invoice.date.anio;
+
+    cout<<"\n\n";
+}
+
+int searchInvoice(Invoice &invoice, int invoice_number){
+    /*
+        Invoice is the variable where the result will be saved
+    */
+    int invoice_index=0;
+    for(int i=1; i<=amount_invoices; i++){
         if(invoices_list[i].invoice_number==invoice_number){
             invoice=invoices_list[i];
             invoice_index=i;
             break;
         }
     }
-    if(!invoice){ // It is empty
+    if(!invoice_index){ // Invoice list doesn't have the invoice requested
         cout<<"ERROR: No existe una factura con ese número de factura.\n";
-        return();
     }
-
-    cout<<"La información de la factura "<<invoice_number<<" es la siguiente:\n";
-    cout<<"  Nombre completo: "<<invoice.customer.nombre<<" "<<invoice.customer.apellido_paterno<<" "<<invoice.customer.apellido_materno<<"\n";
-    cout<<"  Dirección: "<<invoice.address.ciudad<<", Col. "<<invoice.address.colonia<<", Calle "<<invoice.address.calle<<" #"<<invoice.address.numero<<"\n";
-    cout<<"  Fecha y hora: "<<invoice.time.horas<<"H:"<<invoice.time.minutos<<"M:"<<invoice.time.segundos<<"S:"<<invoice.date.dia<<"/"<<invoice.date.mes<<"/"<<invoice.date.anio<<"\n";
-    
-    cout<<"\n¿Desea continuar con la edición?[Se sobreescribirá la información actual] (s/n): ";
-    cin>>aux;
-    while(aux!='s'&&aux!='n'){
-        cout<<"\nERROR: La opción ingresada no es válida.\n";
-        cout<<"Si desea editar la información ingrese \'s\' o si desea volver al menú, ingrese \'n\' : ";
-        cin>>aux;
-    }
-    if(aux=='n'){
-        return();
-    }
-    cout<<"[Escribe la nueva información]\n";
-
-    invoice=setInvoiceData();
-    invoices_list[invoice_index]=invoice;
+    cout<<"\n";
+    return invoice_index;
 }
-/*3*/
-void deleteInvoice();
-/*4*/
-void listInvoices();
+
 /*5*/
-void showInvoice();
+void showInvoice(){
+    Invoice invoice;
+    int invoice_number;
+
+    cout<<"Ingrese el número de la factura que desea visualizar: ";
+    cin>>invoice_number;
+
+    int request=searchInvoice(invoice, invoice_number);
+    if(!request) return;
+
+    printInvoiceData(invoice);
+}

@@ -22,25 +22,25 @@ using namespace std;
 
 
 struct Address{
-    string calle="";
-    int numero=0;
-    string colonia="";
-    string ciudad="";
+    string street="";
+    string number="";
+    string suburb="";
+    string city="";
 };
 struct Date{
-    int dia=0;
-    int mes=0; 
-    int anio=0;
+    int day=0;
+    int month=0; 
+    int year=0;
 };
 struct Time{
-    int horas=0;
-    int minutos=0;
-    int segundos=0;
+    int hours=0;
+    int minutes=0;
+    int seconds=0;
 };
 struct Customer{
-    string nombre="";
-    string apellido_paterno="";
-    string apellido_materno="";
+    string name="";
+    string father_lastname="";
+    string mother_lastname="";
 };
 struct Invoice{
     Address address;
@@ -179,11 +179,11 @@ Customer setCustomerData(){
 
     cout<<"\nIngrese sus datos personales:\n";
     cout<<"  Nombre: ";
-    cin>>customer.nombre;
+    cin>>customer.name;
     cout<<"  Apellido paterno: ";
-    cin>>customer.apellido_paterno;
+    cin>>customer.father_lastname;
     cout<<"  Apellido materno: ";
-    cin>>customer.apellido_materno;
+    cin>>customer.mother_lastname;
 
     return customer;
 }
@@ -192,13 +192,13 @@ Address setAddressData(){
 
     cout<<"\nIngrese los datos de su dirección:\n";
     cout<<"  Ciudad: ";
-    cin>>address.ciudad;
+    cin>>address.city;
     cout<<"  Colonia: ";
-    cin>>address.colonia;
+    cin>>address.suburb;
     cout<<"  Calle: ";
-    cin>>address.calle;
+    cin>>address.street;
     cout<<"  Número: ";
-    cin>>address.numero;
+    cin>>address.number;
 
     return address;
 }
@@ -207,11 +207,11 @@ Date setDateData(){
 
     cout<<"\nIngrese la fecha:\n";
     cout<<"  Dia: ";
-    cin>>date.dia;
+    cin>>date.day;
     cout<<"  Mes: ";
-    cin>>date.mes;
+    cin>>date.month;
     cout<<"  Año: ";
-    cin>>date.anio;
+    cin>>date.year;
 
     return date;
 }
@@ -220,11 +220,11 @@ Time setTimeData(){
 
     cout<<"\nIngrese la hora:\n";
     cout<<"  Hora: ";
-    cin>>time.horas;
+    cin>>time.hours;
     cout<<"  Minuto: ";
-    cin>>time.minutos;
+    cin>>time.minutes;
     cout<<"  Segundo: ";
-    cin>>time.segundos;
+    cin>>time.seconds;
 
     return time;
 }
@@ -253,7 +253,7 @@ void editCustomer(Invoice &invoice) {
     
     do{
         cout<<"[INFORMACION ACTUAL]";
-        cout<<" Cliente: "<<invoice.customer.nombre<<" "<<invoice.customer.apellido_paterno<<" "<<invoice.customer.apellido_materno;
+        cout<<" Cliente: "<<invoice.customer.name<<" "<<invoice.customer.father_lastname<<" "<<invoice.customer.mother_lastname;
         cout<<"\n\n";
         // cout<<"( Los cambios se reflejan cuando termines cuando selecciones terminar )\n"
 
@@ -281,16 +281,16 @@ void editCustomer(Invoice &invoice) {
         switch (option) {
             case 1:
                 cout<<"del nombre: ";
-                cin>>invoice.customer.nombre;
+                cin>>invoice.customer.name;
 
                 break;
             case 2:
                 cout<<"del apellido paterno: ";
-                cin>>invoice.customer.apellido_paterno;
+                cin>>invoice.customer.father_lastname;
                 break;
             case 3:
                 cout<<"del apellido materno: ";
-                cin>>invoice.customer.apellido_materno;
+                cin>>invoice.customer.mother_lastname;
                 break;
             
             default:
@@ -308,7 +308,7 @@ void editAddress(Invoice &invoice) {
 
     do{
         cout<<"[INFORMACION ACTUAL]";
-        cout<<" Dirección: "<<invoice.address.ciudad<<", Col. "<<invoice.address.colonia<<", Calle "<<invoice.address.calle<<" #"<<invoice.address.numero;
+        cout<<" Dirección: "<<invoice.address.city<<", Col. "<<invoice.address.suburb<<", Calle "<<invoice.address.street<<" #"<<invoice.address.number;
         cout<<"\n\n";
 
         cout<<"Datos a editar de la dirección: ";
@@ -336,19 +336,19 @@ void editAddress(Invoice &invoice) {
         switch (option) {
             case 1:
                 cout<<"[1] Ciudad : ";
-                cin>>invoice.address.ciudad;
+                cin>>invoice.address.city;
                 break;
             case 2:
                 cout<<"[2] Colonia : ";
-                cin>>invoice.address.colonia;
+                cin>>invoice.address.suburb;
                 break;
             case 3:
                 cout<<"[3] Calle : ";
-                cin>>invoice.address.calle;
+                cin>>invoice.address.street;
                 break;
             case 4:
                 cout<<"[4] Numero de calle : ";
-                cin>>invoice.address.numero;
+                cin>>invoice.address.number;
                 break;
             
             default:
@@ -364,7 +364,7 @@ void editDateTime(Invoice &invoice) {
     
     do{
         cout<<"[INFORMACION ACTUAL]";
-        cout<<" Fecha y hora: "<<invoice.time.horas<<"H:"<<invoice.time.minutos<<"M:"<<invoice.time.segundos<<"S - "<<invoice.date.dia<<"/"<<invoice.date.mes<<"/"<<invoice.date.anio<<"\n";
+        cout<<" Fecha y hora: "<<invoice.time.hours<<"H:"<<invoice.time.minutes<<"M:"<<invoice.time.seconds<<"S - "<<invoice.date.day<<"/"<<invoice.date.month<<"/"<<invoice.date.year<<"\n";
         cout<<"\n\n";
 
         cout<<"Datos a editar de la fecha y hora: ";
@@ -394,30 +394,30 @@ void editDateTime(Invoice &invoice) {
         switch (option) {
             case 1:
                 cout<<"[1] Dia : ";
-                cin>>invoice.date.dia;
+                cin>>invoice.date.day;
                 break;
 
             case 2:
                 cout<<"[2] Mes : ";
-                cin>>invoice.date.mes;
+                cin>>invoice.date.month;
                 break;
 
             case 3:
                 cout<<"[3] Año : ";
-                cin>>invoice.date.anio;
+                cin>>invoice.date.year;
                 break;
 
             case 4:
                 cout<<"[4] Horas : ";
-                cin>>invoice.time.horas;
+                cin>>invoice.time.hours;
                 break;
             case 5:
                 cout<<"[5] Minutos : ";
-                cin>>invoice.time.minutos;
+                cin>>invoice.time.minutes;
                 break;
             case 6:
                 cout<<"[6] Segundos : ";
-                cin>>invoice.time.segundos;
+                cin>>invoice.time.seconds;
                 break;
             
             default:
@@ -532,15 +532,15 @@ void deleteInvoice(){
 void listInvoices(){
     if(!areThereInvoices())return;
     for(int i=1; i<=amount_invoices; i++){
-        cout<<"  "<<i<<". Factura #"<<invoices_list[i].invoice_number<<" ("<<invoices_list[i].customer.nombre<<" "<<invoices_list[i].customer.apellido_paterno<<").\n";
+        cout<<"  "<<i<<". Factura #"<<invoices_list[i].invoice_number<<" ("<<invoices_list[i].customer.name<<" "<<invoices_list[i].customer.father_lastname<<").\n";
     }
 }
 
 void printInvoiceData(Invoice invoice){
     cout<<"Factura No. "<<invoice.invoice_number<<" : \n";
-    cout<<"  Cliente:  "<<invoice.customer.nombre<<" "<<invoice.customer.apellido_paterno<<" "<<invoice.customer.apellido_materno<<"\n";
-    cout<<"  Dirección:  "<<invoice.address.ciudad<<", Col. "<<invoice.address.colonia<<", Calle "<<invoice.address.calle<<" #"<<invoice.address.numero<<"\n";
-    cout<<"  Fecha y hora:  "<<invoice.time.horas<<"H:"<<invoice.time.minutos<<"M:"<<invoice.time.segundos<<"S - "<<invoice.date.dia<<"/"<<invoice.date.mes<<"/"<<invoice.date.anio;
+    cout<<"  Cliente:  "<<invoice.customer.name<<" "<<invoice.customer.father_lastname<<" "<<invoice.customer.mother_lastname<<"\n";
+    cout<<"  Dirección:  "<<invoice.address.city<<", Col. "<<invoice.address.suburb<<", Calle "<<invoice.address.street<<" #"<<invoice.address.number<<"\n";
+    cout<<"  Fecha y hora:  "<<invoice.time.hours<<"H:"<<invoice.time.minutes<<"M:"<<invoice.time.seconds<<"S - "<<invoice.date.day<<"/"<<invoice.date.month<<"/"<<invoice.date.year;
 
     cout<<"\n\n";
 }

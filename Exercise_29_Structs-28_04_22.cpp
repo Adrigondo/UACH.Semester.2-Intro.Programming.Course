@@ -240,13 +240,6 @@ Invoice setInvoiceData(){
 
     return invoice;
 }
-/*1*/
-void catchInvoice() {
-    Invoice invoice=setInvoiceData();
-    invoices_list[++amount_invoices]=invoice;
-    cout<<"\nGuardando factura nueva...";
-}
-
 void editCustomer(Invoice &invoice) {
     //Customer customer;
     int option;
@@ -428,6 +421,47 @@ void editDateTime(Invoice &invoice) {
         cleanScreen();
     }while(option!=0);
 }
+void popInvoice(int invoice_index){
+    for(int i=invoice_index; i<amount_invoices; i++){
+        invoices_list[i]=invoices_list[i+1];
+    }
+    invoices_list[amount_invoices]=invoice_empty;
+    amount_invoices--;
+}
+void printInvoiceData(Invoice invoice){
+    cout<<"Factura No. "<<invoice.invoice_number<<" : \n";
+    cout<<"  Cliente:  "<<invoice.customer.name<<" "<<invoice.customer.father_lastname<<" "<<invoice.customer.mother_lastname<<"\n";
+    cout<<"  Dirección:  "<<invoice.address.city<<", Col. "<<invoice.address.suburb<<", Calle "<<invoice.address.street<<" #"<<invoice.address.number<<"\n";
+    cout<<"  Fecha y hora:  "<<invoice.time.hours<<"H:"<<invoice.time.minutes<<"M:"<<invoice.time.seconds<<"S - "<<invoice.date.day<<"/"<<invoice.date.month<<"/"<<invoice.date.year;
+
+    cout<<"\n\n";
+}
+int searchInvoice(Invoice &invoice, int invoice_number){
+    /*
+        Invoice is the variable where the result will be saved
+    */
+    int invoice_index=0;
+    for(int i=1; i<=amount_invoices; i++){
+        if(invoices_list[i].invoice_number==invoice_number){
+            invoice=invoices_list[i];
+            invoice_index=i;
+            break;
+        }
+    }
+    if(!invoice_index){ // Invoice list doesn't have the invoice requested
+        cout<<"ERROR: No existe una factura con ese número de factura.\n";
+    }
+    cout<<"\n";
+    return invoice_index;
+}
+
+/*1*/
+void catchInvoice() {
+    Invoice invoice=setInvoiceData();
+    invoices_list[++amount_invoices]=invoice;
+    cout<<"\nGuardando factura nueva...";
+}
+
 /*2*/
 void editInvoice(){
     if(!areThereInvoices())return;
@@ -492,13 +526,6 @@ void editInvoice(){
     invoices_list[invoice_index]=invoice;
 }
 
-void popInvoice(int invoice_index){
-    for(int i=invoice_index; i<amount_invoices; i++){
-        invoices_list[i]=invoices_list[i+1];
-    }
-    invoices_list[amount_invoices]=invoice_empty;
-    amount_invoices--;
-}
 /*3*/
 void deleteInvoice(){
     if(!areThereInvoices())return;
@@ -536,32 +563,6 @@ void listInvoices(){
     }
 }
 
-void printInvoiceData(Invoice invoice){
-    cout<<"Factura No. "<<invoice.invoice_number<<" : \n";
-    cout<<"  Cliente:  "<<invoice.customer.name<<" "<<invoice.customer.father_lastname<<" "<<invoice.customer.mother_lastname<<"\n";
-    cout<<"  Dirección:  "<<invoice.address.city<<", Col. "<<invoice.address.suburb<<", Calle "<<invoice.address.street<<" #"<<invoice.address.number<<"\n";
-    cout<<"  Fecha y hora:  "<<invoice.time.hours<<"H:"<<invoice.time.minutes<<"M:"<<invoice.time.seconds<<"S - "<<invoice.date.day<<"/"<<invoice.date.month<<"/"<<invoice.date.year;
-
-    cout<<"\n\n";
-}
-int searchInvoice(Invoice &invoice, int invoice_number){
-    /*
-        Invoice is the variable where the result will be saved
-    */
-    int invoice_index=0;
-    for(int i=1; i<=amount_invoices; i++){
-        if(invoices_list[i].invoice_number==invoice_number){
-            invoice=invoices_list[i];
-            invoice_index=i;
-            break;
-        }
-    }
-    if(!invoice_index){ // Invoice list doesn't have the invoice requested
-        cout<<"ERROR: No existe una factura con ese número de factura.\n";
-    }
-    cout<<"\n";
-    return invoice_index;
-}
 /*5*/
 void showInvoice(){
     if(!areThereInvoices())return;

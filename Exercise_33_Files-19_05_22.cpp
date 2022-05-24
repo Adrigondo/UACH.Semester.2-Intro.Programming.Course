@@ -22,16 +22,17 @@
 using namespace std;
 
 char vars_route[500]="./Documents/invoices_vars.txt";
-char file_route[500]="./Documents/invoices_registry.txt";
+char temp_route[500]="./Documents/invoices_temp.txt";
+char read_route[500]="./Documents/invoices_records.txt";
 char aux_line[1000]="";
 FILE *invoices_read, *invoices_write, *invoices_vars;
 // fpos_t aux_position, actual_position, end_position, start_position;
 
 struct Address{
-    string street="";
-    string number="";
-    string suburb="";
-    string city="";
+    char street[100]="";
+    char number[10]="";
+    char suburb[50]="";
+    char city[50]="";
 };
 struct Date{
     int day=0;
@@ -44,9 +45,9 @@ struct Time{
     int seconds=0;
 };
 struct Customer{
-    string name="";
-    string father_lastname="";
-    string mother_lastname="";
+    char name[40]="";
+    char father_lastname[20]="";
+    char mother_lastname[20]="";
 };
 struct Invoice{
     Address address;
@@ -56,12 +57,14 @@ struct Invoice{
     int invoice_number;
 };
 
-
 /* --------------------------------DECLARATIONS---------------------------------------------*/
 
 Invoice invoice_empty;
 Invoice invoices_list[11];
 int amount_invoices=0;
+
+void initRecordsFiles();
+void saveRecordsToFile();
 
 Address getAddressData();
 Date getDateData();
@@ -88,7 +91,8 @@ void notifySave();
 /* --------------------------------------MAIN--------------------------------------------------*/
 
 int main(){
-    
+    initRecordsFiles();
+
     // Clean the console
     system ("clear");
 
@@ -157,10 +161,68 @@ int main(){
         // Clean lines since menu
         system ("clear");
     }while(option!=0);
+
+    saveRecordsToFile();
     cout<<"¡Tenga un excelente día BIP BOP!\n\n";
 }
 
 /* --------------------------------IMPLEMENTATIONS---------------------------------------------*/
+Invoice readInvoice(){
+    Invoice invoice;
+    // fgetpos(invoices_read, &aux_position);
+    fscanf(invoices_read,"%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d",
+        &invoice.invoice_number, invoice.customer.name, invoice.customer.father_lastname, invoice.customer.mother_lastname,
+        invoice.address.city, invoice.address.suburb, invoice.address.street, invoice.address.number,
+        &invoice.date.day, &invoice.date.month, &invoice.date.year,
+        &invoice.time.hours, &invoice.time.minutes, &invoice.time.seconds
+    );
+    
+    printf("FACTURA %d: %s %s %s %s %s %s %s %d %d %d %d %d %d\n",
+        invoice.invoice_number, invoice.customer.name, invoice.customer.father_lastname, invoice.customer.mother_lastname,
+        invoice.address.city, invoice.address.suburb, invoice.address.street, invoice.address.number,
+        invoice.date.day, invoice.date.month, invoice.date.year,
+        invoice.time.hours, invoice.time.minutes, invoice.time.seconds
+    );
+    return invoice;
+}
+void initRecordsFiles(){
+    // Open the file
+    invoices_vars=fopen(vars_route, "r+");
+    invoices_read=fopen(read_route, "r");
+    invoices_write=fopen(temp_route, "w");
+
+    fscanf(invoices_vars, "%d", &amount_invoices); // Get the number of invoices
+    // fseek(invoices_read, 0, SEEK_SET);
+    for(int i=1; i<=amount_invoices; i++){
+        invoices_list[i]=readInvoice();
+    }
+
+}
+void saveInvoiceOnFile(Invoice invoice){
+    fprintf(invoices_write, "\n%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d",
+        invoice.invoice_number, invoice.customer.name, invoice.customer.father_lastname, invoice.customer.mother_lastname,
+        invoice.address.city, invoice.address.suburb, invoice.address.street, invoice.address.number,
+        invoice.date.day, invoice.date.month, invoice.date.year,
+        invoice.time.hours, invoice.time.minutes, invoice.time.seconds
+    );
+}
+void saveRecordsToFile(){
+    fseek(invoices_vars, 0, SEEK_SET);
+    fprintf(invoices_vars, "%d", amount_invoices); //Save the number of invoices
+
+    for(int i=1; i<=amount_invoices; i++){
+        saveInvoiceOnFile(invoices_list[i]);
+    }
+
+    // Close the files
+    fclose(invoices_read);
+    fclose(invoices_write);
+    fclose(invoices_vars);
+    rename(temp_route, read_route);
+
+}
+
+
 
 void cleanScreen(){
     // Clean screen

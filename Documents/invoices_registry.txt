@@ -1,3 +1,8 @@
 5	Adrian	Gonzalez	Dominguez	Chihuahua	MuyLejano	Sin	numero	19	5	22	5	5	0
 3	Saulo	Rivera	Rosas	Chihuahua	Lomas	Lejano	0101	20	5	22	5	48	0
 9	Uriel	Nevarez	NIDEA	Chihuahua	MasAlla	Delpubeblo	2512	16	23	22	5	34	22
+1	Hola	Adios	mañana	Nohay	Quizas	Sihay	yano	24	5	22	11	17	0
+676	luis	parker	peter	peru	peruana	calles	89	24	5	22	11	20	0
+45	capturaNueva	nueva	dije	ola	alo	ole�?	32	24	5	22	11	35	0
+654	eesssssr	qqqweqeqeq	eeeggggg	hhhhgggg	fffgggg	fgggfgfhghhg	33334	24	5	22	12	8	0
+6764	asda	hfghhj	bvncv	546456	dfgj	hfghjghj	56456	24	5	22	12	9	0

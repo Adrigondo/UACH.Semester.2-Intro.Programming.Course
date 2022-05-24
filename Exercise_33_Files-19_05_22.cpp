@@ -25,13 +25,13 @@ char vars_route[500]="./Documents/invoices_vars.txt";
 char file_route[500]="./Documents/invoices_registry.txt";
 char aux_line[1000]="";
 FILE *invoices_read, *invoices_write, *invoices_vars;
-fpos_t aux_position, actual_position, end_position, start_position;
+// fpos_t aux_position, actual_position, end_position, start_position;
 
 struct Address{
-    char street[100]="";
-    char number[10]="";
-    char suburb[50]="";
-    char city[50]="";
+    string street="";
+    string number="";
+    string suburb="";
+    string city="";
 };
 struct Date{
     int day=0;
@@ -44,9 +44,9 @@ struct Time{
     int seconds=0;
 };
 struct Customer{
-    char name[40]="";
-    char father_lastname[20]="";
-    char mother_lastname[20]="";
+    string name="";
+    string father_lastname="";
+    string mother_lastname="";
 };
 struct Invoice{
     Address address;
@@ -68,11 +68,6 @@ Date getDateData();
 Time getTimeData();
 Customer getCustomerData();
 Invoice getInvoiceData();
-
-void saveInvoiceOnFile(Invoice invoice);
-Invoice readInvoice();
-void saveNewInvoice(Invoice invoice);
-
 /*1*/ void catchInvoice();
 
 void editCustomer(Invoice &invoice);
@@ -93,17 +88,10 @@ void notifySave();
 /* --------------------------------------MAIN--------------------------------------------------*/
 
 int main(){
+    
     // Clean the console
     system ("clear");
 
-    // Open the file
-    invoices_vars=fopen(vars_route,"r+");
-    fscanf(invoices_vars, "%d", &amount_invoices);
-    cout<<"DEV - Cantidad facturas: "<<amount_invoices;
-    invoices_read=fopen(file_route,"r");
-    invoices_write=fopen(file_route,"r+");
-    // fgetpos(invoices_file, &start_position);
-    // fgetpos(invoices_write, &start_position);
     int option=0;
     do {
         // Start poster
@@ -169,9 +157,6 @@ int main(){
         // Clean lines since menu
         system ("clear");
     }while(option!=0);
-    fclose(invoices_read);
-    fclose(invoices_write);
-    fclose(invoices_vars);
     cout<<"¡Tenga un excelente día BIP BOP!\n\n";
 }
 
@@ -195,55 +180,6 @@ bool areThereInvoices(){
     }
     return true;
 }
-void saveNewInvoice(Invoice invoice){
-    // fgetpos(invoices_write, &actual_position);
-    fseek(invoices_write,0,SEEK_END);
-    saveInvoiceOnFile(invoice);
-    // fsetpos(invoices_write, &actual_position);
-}
-void saveInvoiceOnFile(Invoice invoice){
-    // fgetpos(invoices_file, &aux_position);
-    // fscanf(invoices_file,"%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d",
-    //     &invoice.invoice_number, invoice.customer.name, invoice.customer.father_lastname, invoice.customer.mother_lastname,
-    //     invoice.address.city, invoice.address.suburb, invoice.address.street, invoice.address.number,
-    //     &invoice.date.day, &invoice.date.month, &invoice.date.year,
-    //     &invoice.time.hours, &invoice.time.minutes, &invoice.time.seconds
-    // );
-    // fsetpos(invoices_file, &aux_position);
-    fprintf(invoices_write, "\n%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d",
-        invoice.invoice_number, invoice.customer.name, invoice.customer.father_lastname, invoice.customer.mother_lastname,
-        invoice.address.city, invoice.address.suburb, invoice.address.street, invoice.address.number,
-        invoice.date.day, invoice.date.month, invoice.date.year,
-        invoice.time.hours, invoice.time.minutes, invoice.time.seconds
-    );
-    
-    // printf("FACTURA A EDITAR: %d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\n",
-    //     invoice.invoice_number, invoice.customer.name, invoice.customer.father_lastname, invoice.customer.mother_lastname,
-    //     invoice.address.city, invoice.address.suburb, invoice.address.street, invoice.address.number,
-    //     invoice.date.day, invoice.date.month, invoice.date.year,
-    //     invoice.time.hours, invoice.time.minutes, invoice.time.seconds
-    // );
-    // fsetpos(invoices_file, &aux_position);
-}
-Invoice readInvoice(){
-    Invoice invoice;
-    // fgetpos(invoices_read, &aux_position);
-    fscanf(invoices_read,"%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d",
-        &invoice.invoice_number, invoice.customer.name, invoice.customer.father_lastname, invoice.customer.mother_lastname,
-        invoice.address.city, invoice.address.suburb, invoice.address.street, invoice.address.number,
-        &invoice.date.day, &invoice.date.month, &invoice.date.year,
-        &invoice.time.hours, &invoice.time.minutes, &invoice.time.seconds
-    );
-    
-    printf("FACTURA %d: %s %s %s %s %s %s %s %d %d %d %d %d %d\n",
-        invoice.invoice_number, invoice.customer.name, invoice.customer.father_lastname, invoice.customer.mother_lastname,
-        invoice.address.city, invoice.address.suburb, invoice.address.street, invoice.address.number,
-        invoice.date.day, invoice.date.month, invoice.date.year,
-        invoice.time.hours, invoice.time.minutes, invoice.time.seconds
-    );
-    return invoice;
-}
-
 
 Customer setCustomerData(){
     Customer customer;
@@ -311,7 +247,6 @@ Invoice setInvoiceData(){
 
     return invoice;
 }
-
 void editCustomer(Invoice &invoice) {
     //Customer customer;
     int option;
@@ -513,25 +448,9 @@ int searchInvoice(Invoice &invoice, int invoice_number){
         Invoice is the variable where the result will be saved
     */
     int invoice_index=0;
-    Invoice aux;
-    // fgetpos(invoices_read, &actual_position);
-    fseek(invoices_read, 0, SEEK_SET);
-    // fopen(invoices_file, "r")
     for(int i=1; i<=amount_invoices; i++){
-        fgetpos(invoices_read, &aux_position);
-        aux=readInvoice();
-        if(aux.invoice_number==invoice_number){
-            fsetpos(invoices_write, &aux_position);
-            // cout<<"ENCONTRADO: ";
-            // aux=readInvoice();
-            // printf("FACTURA %d: %s %s %s %s %s %s %s %d %d %d %d %d %d\n",
-            //     aux.invoice_number, aux.customer.name, aux.customer.father_lastname, aux.customer.mother_lastname,
-            //     aux.address.city, aux.address.suburb, aux.address.street, aux.address.number,
-            //     aux.date.day, aux.date.month, aux.date.year,
-            //     aux.time.hours, aux.time.minutes, aux.time.seconds
-            // );
-            // fsetpos(invoices_file, &aux_position);
-            invoice=aux;
+        if(invoices_list[i].invoice_number==invoice_number){
+            invoice=invoices_list[i];
             invoice_index=i;
             break;
         }
@@ -546,11 +465,7 @@ int searchInvoice(Invoice &invoice, int invoice_number){
 /*1*/
 void catchInvoice() {
     Invoice invoice=setInvoiceData();
-    amount_invoices++;
-    saveNewInvoice(invoice);
-    fseek(invoices_vars, 0, SEEK_SET);
-    fprintf(invoices_vars, "%d", amount_invoices);
-    // invoices_list[amount_invoices]=invoice;
+    invoices_list[++amount_invoices]=invoice;
     cout<<"\nGuardando factura nueva...";
 }
 
@@ -615,13 +530,7 @@ void editInvoice(){
         notifySave();
         cleanScreen();
     }while(option!=0);
-    
-    saveInvoiceOnFile(invoice);
-    // fputs("\0", invoices_write);
-    freopen(file_route, "r+", invoices_write);
-    freopen(file_route, "r", invoices_read);
-    // fsetpos(invoices_write, &actual_position);
-    // invoices_list[invoice_index]=invoice;
+    invoices_list[invoice_index]=invoice;
 }
 
 /*3*/
